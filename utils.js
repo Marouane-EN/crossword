@@ -1,4 +1,4 @@
-
+ //------------- check if word is duplicated
 export function duplication(words) {
   for (let i = 0; i < words.length; i++) {
     for (let j = i + 1; j < words.length; j++) {
@@ -9,6 +9,10 @@ export function duplication(words) {
   }
   return true;
 }
+
+
+
+//---------- check if empty spaces match the length of our words
 export function checklength(puzzle) {
   let count = 0;
   const regx = /\d+/g;
@@ -28,3 +32,16 @@ export function checklength(puzzle) {
   return count;
 }
 
+
+//----------- check if every line is in the same length
+export function checklines(puzzle){
+  let splitedpuzzle = puzzle.split('\n')
+  console.log(splitedpuzzle);
+  for (let i = 0 ; i < splitedpuzzle.length ;  i ++){
+    let fixedlength = splitedpuzzle[0].length
+    if (splitedpuzzle[i].length != fixedlength){
+      return false
+    }
+  }
+  return true
+}
