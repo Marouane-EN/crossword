@@ -33,7 +33,7 @@ const puzzle = '2001\n0..0\n1000\n0..0'
 const words = ['caa', 'alan', 'ciao', 'anta']
 console.log(validPuzzle(puzzle));
 // console.log(crosswordSolver(words,puzzle));
-  
+  //
 // function recursive(c){
 //     if(c>10){
 //         return ;
