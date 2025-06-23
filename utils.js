@@ -45,3 +45,13 @@ export function checklines(puzzle){
   }
   return true
 }
+//-------- check if there is only valid characters
+export function validPuzzle(puzzle) {
+    const validChars = ["0", "1", "2", ".","\n"];
+    for (let i = 0; i < puzzle.length; i++) {
+        if (!validChars.includes(puzzle[i])) {
+            return false;
+        }
+    }
+    return true;
+}

@@ -1,4 +1,4 @@
-import { duplication, checklength,checklines } from "./utils.js";
+import { duplication, checklength,checklines,validPuzzle } from "./utils.js";
 function crosswordSolver(words, puzzle) {
   if (
     !Array.isArray(words) ||
@@ -13,21 +13,12 @@ function crosswordSolver(words, puzzle) {
   if (checklength(puzzle) !== joindWord.length) {
     return "Error length";
   }
-  if(!checklines(puzzle)){
-    return "Eroror checklines"
+  if(!checklines(puzzle)|| !validPuzzle(puzzle)){
+    return "Eroror checklines or validpuzzle"
   }
   return "dsdf";
 }
 
-export function validPuzzle(puzzle) {
-    const validChars = ["0", "1", "2", ".","\n"];
-    for (let i = 0; i < puzzle.length; i++) {
-        if (!validChars.includes(puzzle[i])) {
-            return false;
-        }
-    }
-    return true;
-}
 
 const puzzle = '2001\n0..0\n1000\n0..0'
 const words = ['caa', 'alan', 'ciao', 'anta']
