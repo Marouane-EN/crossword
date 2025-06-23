@@ -55,3 +55,13 @@ export function validPuzzle(puzzle) {
     }
     return true;
 }
+//----------- check if there is only aplha lowercasse letters
+export function checkalpha (words){
+  let joined = words.join('')
+  for (let i = 0 ; i < joined.length ; i ++){
+    if (joined[i] < 'a' || joined[i] > 'z') {
+        return false
+    }
+  }
+  return true
+}

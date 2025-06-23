@@ -1,4 +1,4 @@
-import { duplication, checklength,checklines,validPuzzle } from "./utils.js";
+import { duplication, checklength,checklines,validPuzzle,checkalpha } from "./utils.js";
 function crosswordSolver(words, puzzle) {
   if (
     !Array.isArray(words) ||
@@ -16,15 +16,17 @@ function crosswordSolver(words, puzzle) {
   if(!checklines(puzzle)|| !validPuzzle(puzzle)){
     return "Eroror checklines or validpuzzle"
   }
+  if (!checkalpha(words)){
+    return "Error checkalpha"
+  }
   return "dsdf";
 }
 
 
-const puzzle = '2001\n0..0\n1000\n0..0'
+const puzzle = `222
+222`
 const words = ['caa', 'alan', 'ciao', 'anta']
-console.log(validPuzzle(puzzle));
-// console.log(crosswordSolver(words,puzzle));
-  //
+
 // function recursive(c){
 //     if(c>10){
 //         return ;
