@@ -39,7 +39,7 @@ function solvepuzzel(word, p) {
   let row = 0
   // shallow copy second grid which will contain result 
   let result = p.map(ss => ([...ss]))
-  console.log("-------------", result)
+ 
 
   while (row < p.length) {
     while (col < p[0].length) {
