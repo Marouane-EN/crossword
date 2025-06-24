@@ -37,33 +37,64 @@ function solvepuzzel(word, p) {
   console.log(p)
   let col = 0
   let row = 0
-  // shalow copy seconde grid who will contain result 
-  let reuslt = p.map(row => ([...row]))
-  // ---------------------->
-  console.log("-------------", reuslt)
+  // shallow copy second grid which will contain result 
+  let result = p.map(ss => ([...ss]))
+  console.log("-------------", result)
 
-  while (col < p[0].length) {
-    while (row < p.length) {
-      // console.log(typeof(p[i][row]))
-      let tmp = p[col][row];
-      //console.log(tmp > 0)
-      if (!isNaN(tmp)) {
-        if (tmp > 0) {
-          if (horizental(reuslt[row], col, word)) {
-            console.log("true")
+  while (row < p.length) {
+    while (col < p[0].length) {
+      let tmp = p[row][col];
+      let k = 0;
+      let detect = 0;
 
-          } else if (vertical(p, col, row, word)) {
-            console.log("dsfdfs");
-            
-          } 
+      while (k < word.length) {
+        if (!isNaN(tmp)) {
+          if (tmp > 0) {
+            console.log("at wordsd")
+            console.log(word[k], row, col)
+            console.log("at words")
+            if (horizental(result[row], col, word[k])) {
+              console.log("true")
+              let n = 0
+              let r = word[k].split("")
+              console.log(r)
+              //  check if there is matching
+              // console.log("-------------------------im at check>")
+              while (n < r.length) {
+                result[row][col + n] = r[n]
+                n++
+              }
+              detect++
+              console.log("result", result);
+
+              //console.log("--------------------------im at check>")
+            } else if (vertical(result, col, row, word[k])) {
+              //console.log("dsfdfs");
+              let r = word[k].split("")
+              console.log(r)
+              let n = 0
+              while (n < r.length) {
+                result[row + n][col] = r[n]
+                n++
+              }
+              console.log("result", result);
+              detect++
+            }
+          }
         }
+        k++
       }
-      row++
+      col++
     }
-    col++
-    row = 0
+    row++
+    col = 0
   }
+
+
+  console.log(result.map(r => r.join('')).join('\n'))
 }
+
+
 
 function solver(matrix, solved, words, index, row, col) {
   if (!isNaN(matrix[row][col])) {
@@ -101,24 +132,29 @@ function horizental(row, col, word) {
 }
 function vertical(grid, col, row, word) {
   let count = 0;
-  for (let i = col; i < grid.length; i++) {
-    if (grid[i][row] == '.') {
+  for (let i = row; i < grid.length; i++) {
+    if (grid[i][col] == '.') {casa
       break
     }
-    if (col > 0 && grid[col - 1][row] != '.') {
+    if (row > 0 && grid[row - 1][col] != '.') {
+      //console.log("/////////", word);
       return false
     }
-    if (!isNaN(grid[i][row])) {
+    if (!isNaN(grid[i][col])) {
       count++
     } else {
-      if (grid[i][row] == word[i - col]) {
+      if (grid[i][col] == word[i - row]) {
         count++
       } else {
+        //  console.log("/////////", word);
+
         return false
       }
 
     }
   }
+  // console.log("/////////", word,count);
+
   return count == word.length;
 }
 const puzzle = `2001
@@ -126,7 +162,7 @@ const puzzle = `2001
 1000
 0..0`
 
-const words = ['casa', 'alan', 'ciao', 'anta']
+const words = ['casa', 'anta', 'alan', 'ciao']
 
 
 console.log(crosswordSolver(words, puzzle))
