@@ -16,7 +16,7 @@ function crosswordSolver(words, puzzle) {
   const joindWord = words.join("");
   //console.log("join", joindWord.length);
   //console.log("length", checklength(puzzle));
-  if (checklength(puzzle) !== joindWord.length) {
+  if (!checklength(puzzle,words)) {
     return "Error length";
   }
   if (!checklines(puzzle) || !validPuzzle(puzzle)) {
@@ -31,68 +31,66 @@ function crosswordSolver(words, puzzle) {
   return "finish";
 }
 
-function solvepuzzel(word, p) {
-  console.log("at solver ")
-  console.log(word)
-  console.log(p)
-  let col = 0
-  let row = 0
-  // shallow copy second grid which will contain result 
-  let result = p.map(ss => ([...ss]))
- 
+function solvepuzzel(words, puzzle) {
+  const result = puzzle.map(row => [...row]);
+  let Count = 0
+  let r
+  function backtrack(index) {
+    if (index === words.length) {
+      Count++
+      if (Count > 1) {
+        return true
+      }
+      r = result.map(row => [...row]);
+      return false; // all words placed successfully
+    }
 
-  while (row < p.length) {
-    while (col < p[0].length) {
-      let tmp = p[row][col];
-      let k = 0;
-      let detect = 0;
+    const word = words[index];
 
-      while (k < word.length) {
-        if (!isNaN(tmp)) {
-          if (tmp > 0) {
-            console.log("at wordsd")
-            console.log(word[k], row, col)
-            console.log("at words")
-            if (horizental(result[row], col, word[k])) {
-              console.log("true")
-              let n = 0
-              let r = word[k].split("")
-              console.log(r)
-              //  check if there is matching
-              // console.log("-------------------------im at check>")
-              while (n < r.length) {
-                result[row][col + n] = r[n]
-                n++
-              }
-              detect++
-              console.log("result", result);
+    for (let row = 0; row < puzzle.length; row++) {
+      for (let col = 0; col < puzzle[0].length; col++) {
+        if (!isNaN(puzzle[row][col]) && Number(puzzle[row][col]) > 0) {
+          if (horizental(result[row], col, word)) {
+            const backup = [...result[row]]; // save current row
+            for (let i = 0; i < word.length; i++) {
+              result[row][col + i] = word[i]
+            }
 
-              //console.log("--------------------------im at check>")
-            } else if (vertical(result, col, row, word[k])) {
-              //console.log("dsfdfs");
-              let r = word[k].split("")
-              console.log(r)
-              let n = 0
-              while (n < r.length) {
-                result[row + n][col] = r[n]
-                n++
-              }
-              console.log("result", result);
-              detect++
+            if (backtrack(index + 1)) return true;
+            result[row] = backup; // backtrack
+          }
+
+          if (vertical(result, col, row, word)) {
+
+            const backup = result.map(r => [...r]); 
+            for (let i = 0; i < word.length; i++) {
+              result[row + i][col] = word[i]
+            }
+            if (backtrack(index + 1)) return true;
+            for (let i = 0; i < result.length; i++) {
+              result[i] = [...backup[i]];
             }
           }
         }
-        k++
       }
-      col++
     }
-    row++
-    col = 0
+
+    return false; // no placement worked
   }
+backtrack(0);
 
-
-  console.log(result.map(r => r.join('')).join('\n'))
+if (Count === 0) {
+  console.log("No solution found.");
+} else if (Count === 1) {
+  console.log("Unique solution:");
+  console.log(r.map(t => t.join("")).join("\n"));
+  
+} else {
+  console.log("Error: Multiple solutions found.");
 }
+
+}
+
 
 
 
@@ -111,6 +109,8 @@ function solver(matrix, solved, words, index, row, col) {
 
 function horizental(row, col, word) {
   let count = 0;
+  //console.log(word);
+
   for (let i = col; i < row.length; i++) {
     if (row[i] == ".") {
       break;
@@ -133,7 +133,7 @@ function horizental(row, col, word) {
 function vertical(grid, col, row, word) {
   let count = 0;
   for (let i = row; i < grid.length; i++) {
-    if (grid[i][col] == '.') {casa
+    if (grid[i][col] == '.') {
       break
     }
     if (row > 0 && grid[row - 1][col] != '.') {
@@ -154,16 +154,10 @@ function vertical(grid, col, row, word) {
     }
   }
   // console.log("/////////", word,count);
-
   return count == word.length;
 }
-const puzzle = `2001
-0..0
-1000
-0..0`
-
-const words = ['casa', 'anta', 'alan', 'ciao']
-
+const puzzle = '2001\n0..0\n1000\n0..0'
+const words = ['aaab', 'aaac', 'aaad', 'aaae']
 
 console.log(crosswordSolver(words, puzzle))
 
