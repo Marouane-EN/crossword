@@ -14,8 +14,8 @@ function crosswordSolver(words, puzzle) {
     return "Error";
   }
   const joindWord = words.join("");
-  console.log("join", joindWord.length);
-  console.log("length", checklength(puzzle));
+  //console.log("join", joindWord.length);
+  //console.log("length", checklength(puzzle));
   if (checklength(puzzle) !== joindWord.length) {
     return "Error length";
   }
@@ -25,8 +25,46 @@ function crosswordSolver(words, puzzle) {
   if (!checkalpha(words)) {
     return "Error checkalpha";
   }
-  return "dsdf";
+  let grid = puzzle.split('\n').map(row => row.split(''));
+
+  solvepuzzel(words, grid)
+  return "finish";
 }
+
+function solvepuzzel(word, p) {
+  console.log("at solver ")
+  console.log(word)
+  console.log(p)
+  let col = 0
+  let row = 0
+  // shalow copy seconde grid who will contain result 
+  let reuslt = p.map(row => ([...row]))
+  // ---------------------->
+  console.log("-------------", reuslt)
+
+  while (col < p[0].length) {
+    while (row < p.length) {
+      // console.log(typeof(p[i][row]))
+      let tmp = p[col][row];
+      //console.log(tmp > 0)
+      if (!isNaN(tmp)) {
+        if (tmp > 0) {
+          if (horizental(reuslt[row], col, word)) {
+            console.log("true")
+
+          } else if (vertical(p, col, row, word)) {
+            console.log("dsfdfs");
+            
+          } 
+        }
+      }
+      row++
+    }
+    col++
+    row = 0
+  }
+}
+
 function solver(matrix, solved, words, index, row, col) {
   if (!isNaN(matrix[row][col])) {
     let num = Number(matrix[row][col]);
@@ -34,6 +72,7 @@ function solver(matrix, solved, words, index, row, col) {
       num = num - 1;
       matrix[row][col] = String(num);
       if (horizental(matrix[row], col, words[index])) {
+        console.log()
       }
     }
   }
@@ -48,13 +87,10 @@ function horizental(row, col, word) {
     if (col > 0 && row[col - 1] != ".") {
       return false;
     }
-    if (count == word.length && (i != row.length - 1 || row[i + 1] != ".")) {
-      return false;
-    }
     if (!isNaN(row[i])) {
       count++;
     } else {
-      if (row[i] == word[i]) {
+      if (row[i] == word[i - col]) {
         count++;
       } else {
         return false;
@@ -63,10 +99,37 @@ function horizental(row, col, word) {
   }
   return count == word.length;
 }
+function vertical(grid, col, row, word) {
+  let count = 0;
+  for (let i = col; i < grid.length; i++) {
+    if (grid[i][row] == '.') {
+      break
+    }
+    if (col > 0 && grid[col - 1][row] != '.') {
+      return false
+    }
+    if (!isNaN(grid[i][row])) {
+      count++
+    } else {
+      if (grid[i][row] == word[i - col]) {
+        count++
+      } else {
+        return false
+      }
 
-const puzzle = `222
-222`;
-const words = ["caa", "alan", "ciao", "anta"];
+    }
+  }
+  return count == word.length;
+}
+const puzzle = `2001
+0..0
+1000
+0..0`
+
+const words = ['casa', 'alan', 'ciao', 'anta']
+
+
+console.log(crosswordSolver(words, puzzle))
 
 // function recursive(c){
 //     if(c>10){
