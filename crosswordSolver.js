@@ -5,6 +5,9 @@ import {
   validPuzzle,
   checkalpha,
 } from "./utils.js";
+
+import { horizental, vertical } from "./puzzle.js"
+
 function crosswordSolver(words, puzzle) {
   if (
     !Array.isArray(words) ||
@@ -14,27 +17,24 @@ function crosswordSolver(words, puzzle) {
     return "Error";
   }
   const joindWord = words.join("");
-  //console.log("join", joindWord.length);
-  //console.log("length", checklength(puzzle));
-  if (!checklength(puzzle,words)) {
-    return "Error length";
+  if (!checklength(puzzle, words)) {
+    return "Error";
   }
   if (!checklines(puzzle) || !validPuzzle(puzzle)) {
-    return "Eroror checklines or validpuzzle";
+    return "Error";
   }
   if (!checkalpha(words)) {
-    return "Error checkalpha";
+    return "Error";
   }
   let grid = puzzle.split('\n').map(row => row.split(''));
-
   solvepuzzel(words, grid)
-  return "finish";
+  return ''
 }
 
-function solvepuzzel(words, puzzle) {
+export function solvepuzzel(words, puzzle) {
   const result = puzzle.map(row => [...row]);
   let Count = 0
-  let r
+  var r = [];
   function backtrack(index) {
     if (index === words.length) {
       Count++
@@ -59,10 +59,9 @@ function solvepuzzel(words, puzzle) {
             if (backtrack(index + 1)) return true;
             result[row] = backup; // backtrack
           }
-
           if (vertical(result, col, row, word)) {
 
-            const backup = result.map(r => [...r]); 
+            const backup = result.map(r => [...r]);
             for (let i = 0; i < word.length; i++) {
               result[row + i][col] = word[i]
             }
@@ -74,100 +73,35 @@ function solvepuzzel(words, puzzle) {
         }
       }
     }
-
-    return false; // no placement worked
+    return false;
   }
-backtrack(0);
+  // call backtrack starting from the first word !!
+  backtrack(0); 
 
-if (Count === 0) {
-  console.log("No solution found.");
-} else if (Count === 1) {
-  console.log("Unique solution:");
-  console.log(r.map(t => t.join("")).join("\n"));
-  
-} else {
-  console.log("Error: Multiple solutions found.");
-}
-
-}
-
-
-
-
-function solver(matrix, solved, words, index, row, col) {
-  if (!isNaN(matrix[row][col])) {
-    let num = Number(matrix[row][col]);
-    if (num > 0) {
-      num = num - 1;
-      matrix[row][col] = String(num);
-      if (horizental(matrix[row], col, words[index])) {
-        console.log()
+  if (Count === 0) {
+    console.log("Error");
+  } else if (Count === 1) {
+    let row = 0
+    while (row < r.length) {
+    let col = 0
+    while (col < r[0].length) {
+         process.stdout.write(r[row][col]);
+        col++;
       }
-    }
-  }
-}
-
-function horizental(row, col, word) {
-  let count = 0;
-  //console.log(word);
-
-  for (let i = col; i < row.length; i++) {
-    if (row[i] == ".") {
-      break;
-    }
-    if (col > 0 && row[col - 1] != ".") {
-      return false;
-    }
-    if (!isNaN(row[i])) {
-      count++;
-    } else {
-      if (row[i] == word[i - col]) {
-        count++;
-      } else {
-        return false;
+      if (row < r.length - 1) {
+      process.stdout.write('\n');
       }
+      row++;
     }
-  }
-  return count == word.length;
-}
-function vertical(grid, col, row, word) {
-  let count = 0;
-  for (let i = row; i < grid.length; i++) {
-    if (grid[i][col] == '.') {
-      break
-    }
-    if (row > 0 && grid[row - 1][col] != '.') {
-      //console.log("/////////", word);
-      return false
-    }
-    if (!isNaN(grid[i][col])) {
-      count++
-    } else {
-      if (grid[i][col] == word[i - row]) {
-        count++
-      } else {
-        //  console.log("/////////", word);
 
-        return false
-      }
-
-    }
+  } else {
+    console.log("Error");
   }
-  // console.log("/////////", word,count);
-  return count == word.length;
+
 }
+
 const puzzle = '2001\n0..0\n1000\n0..0'
-const words = ['aaab', 'aaac', 'aaad', 'aaae']
-
+const words = ['casa', 'alan', 'ciao', 'anta']
 console.log(crosswordSolver(words, puzzle))
 
-// function recursive(c){
-//     if(c>10){
-//         return ;
-//     }
 
-//     recursive(c+1)
-//     console.log(c);
-// }
-
-// recursive(0)
